@@ -7,6 +7,7 @@ const templateRoutes = require('./routes/templateRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const userRoutes = require('./routes/userRoutes');
+const productRoutes = require('./routes/productRoutes');
 
 // Initialize the Express app
 const app = express();
@@ -34,6 +35,9 @@ app.get('/success', (req, res) => {
 
 // User routes
 app.use('/api/user', userRoutes);
+
+// Product routes
+app.use('/api/products', productRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

@@ -1,13 +1,19 @@
 // src/app/layout.js
-import './globals.css';
+"use client";
+import React from 'react';
+import Header from '@/components/Header';
 import { AuthProvider } from '@/context/AuthContext';
+import './globals.css';
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body>
+      <body className="bg-gray-100">
         <AuthProvider>
-          {children}
+          <Header />
+          <main className="container mx-auto p-4">
+            {children}
+          </main>
         </AuthProvider>
       </body>
     </html>

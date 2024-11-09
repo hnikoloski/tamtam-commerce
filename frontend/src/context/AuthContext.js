@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
     const router = useRouter();
 
     useEffect(() => {
-        // Check if a token is saved in localStorage on component mount
         const savedToken = localStorage.getItem('token');
         if (savedToken) {
             setToken(savedToken);
