@@ -5,14 +5,16 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
-  const { token } = useContext(AuthContext);
+  const { token, loading } = useContext(AuthContext);
   const router = useRouter();
 
   useEffect(() => {
-    if (!token) {
+    if (!loading && !token) {
       router.push("/login");
     }
-  }, [token, router]);
+  }, [token, loading, router]);
+
+  if (loading) return null; // Show nothing or a loading spinner while checking `token`
 
   return token ? children : null;
 };

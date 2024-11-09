@@ -1,4 +1,3 @@
-// src/components/ProductForm.js
 "use client";
 import React, { useState, useContext } from "react";
 import axios from "axios";

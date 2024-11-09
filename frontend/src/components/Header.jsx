@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 
 const Header = () => {
-  const { token, logout } = useContext(AuthContext);
+  const authContext = useContext(AuthContext);
+
+  const { token, logout } = authContext || {};
   const router = useRouter();
 
   const handleLogout = () => {

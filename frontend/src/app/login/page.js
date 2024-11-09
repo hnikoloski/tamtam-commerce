@@ -6,7 +6,7 @@ import { AuthContext } from '@/context/AuthContext';
 
 const Login = () => {
     const router = useRouter();
-    const { login } = useContext(AuthContext); // Access `login` from AuthContext
+    const { login } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
@@ -18,10 +18,9 @@ const Login = () => {
                 email,
                 password,
             });
-
             const token = response.data.token;
-            login(token); // Use login from context to set token
-            router.push('/dashboard'); // Redirect to dashboard
+            login(token); // Set the token in context
+            router.push('/dashboard');
         } catch (err) {
             setError('Invalid credentials. Please try again.');
             console.error('Login error:', err);
