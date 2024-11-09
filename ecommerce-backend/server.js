@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const templateRoutes = require('./routes/templateRoutes');
 const siteRoutes = require('./routes/siteRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 // Initialize the Express app
 const app = express();
@@ -30,6 +31,9 @@ app.use('/api/payments', paymentRoutes); // Add payment routes
 app.get('/success', (req, res) => {
     res.send("<h1>Payment Successful</h1><p>Thank you for your payment!</p>");
 });
+
+// User routes
+app.use('/api/user', userRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;
