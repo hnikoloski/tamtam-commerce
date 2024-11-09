@@ -14,7 +14,7 @@ const ProtectedRoute = ({ children }) => {
     }
   }, [token, loading, router]);
 
-  if (loading) return null; // Show nothing or a loading spinner while checking `token`
+  if (loading) return <p>Loading...</p>;
 
   return token ? children : null;
 };
