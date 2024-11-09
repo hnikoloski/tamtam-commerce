@@ -1,3 +1,4 @@
+// models/User.js
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -5,9 +6,9 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    selectedTemplate: { type: mongoose.Schema.Types.ObjectId, ref: 'Template' }, // Reference to chosen template
+    selectedTemplate: { type: mongoose.Schema.Types.ObjectId, ref: 'Template' },
+    refreshToken: { type: String }, // New field for storing the refresh token
 });
-
 
 // Hash password before saving
 userSchema.pre('save', async function (next) {

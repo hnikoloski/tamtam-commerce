@@ -1,6 +1,7 @@
+// controllers/authController.js
 const User = require('../models/User');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const { generateAccessToken, generateRefreshToken } = require('../utils/tokenUtils');
 
 // Register a new user
 exports.register = async (req, res) => {
@@ -12,9 +13,14 @@ exports.register = async (req, res) => {
         }
 
         const user = await User.create({ name, email, password });
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
 
-        res.status(201).json({ token, user });
+        // Save refresh token to user in database
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        res.status(201).json({ accessToken, refreshToken, user });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -34,9 +40,34 @@ exports.login = async (req, res) => {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        res.json({ token, user });
+        const accessToken = generateAccessToken(user);
+        const refreshToken = generateRefreshToken(user);
+
+        user.refreshToken = refreshToken;
+        await user.save();
+
+        res.json({ accessToken, refreshToken, user });
     } catch (error) {
         res.status(500).json({ message: error.message });
+    }
+};
+
+// Refresh the access token
+exports.refreshToken = async (req, res) => {
+    const { token } = req.body;
+    if (!token) return res.sendStatus(401);
+
+    try {
+        const user = await User.findOne({ refreshToken: token });
+        if (!user) return res.sendStatus(403);
+
+        jwt.verify(token, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
+            if (err) return res.sendStatus(403);
+
+            const accessToken = generateAccessToken(user);
+            res.json({ accessToken });
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Could not refresh token' });
     }
 };
