@@ -5,7 +5,7 @@ import axios from "axios";
 import { AuthContext } from "@/context/AuthContext";
 
 const Dashboard = () => {
-    const { token, logout } = useContext(AuthContext);
+    const { token, logout } = useContext(AuthContext);  // Access context
     const [dashboardData, setDashboardData] = useState(null);
     const [error, setError] = useState(null);
 
@@ -13,7 +13,7 @@ const Dashboard = () => {
         const fetchDashboardData = async () => {
             try {
                 const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/dashboard`, {
-                    headers: { Authorization: `Bearer ${token}` },
+                    headers: { Authorization: `Bearer ${token}` },  // Use token
                 });
                 setDashboardData(response.data);
                 setError(null); // Clear any previous error
@@ -30,7 +30,7 @@ const Dashboard = () => {
         if (token) {
             fetchDashboardData();
         }
-    }, [token, logout]);
+    }, [token, logout]);  // Ensure that the effect is rerun when token changes
 
     if (error) {
         return <p className="text-red-500">{error}</p>;

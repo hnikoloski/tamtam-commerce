@@ -1,7 +1,10 @@
 // src/context/AuthContext.js
+"use client";
+
 import React, { createContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
+// Create the AuthContext
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -30,9 +33,11 @@ export const AuthProvider = ({ children }) => {
         router.push('/login');
     };
 
+
     return (
         <AuthContext.Provider value={{ token, login, logout, loading }}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 };
+

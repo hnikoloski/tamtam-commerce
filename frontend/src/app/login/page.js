@@ -1,3 +1,4 @@
+// src/app/login/page.js
 "use client";
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
@@ -6,10 +7,11 @@ import { AuthContext } from '@/context/AuthContext';
 
 const Login = () => {
     const router = useRouter();
-    const { login } = useContext(AuthContext);
+    const { login, loading } = useContext(AuthContext); // Access login and loading state
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    if (loading) return <p>Loading...</p>; // Prevent login attempt until loading is complete
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -41,6 +43,7 @@ const Login = () => {
                             onChange={(e) => setEmail(e.target.value)}
                             required
                             className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            autoComplete='email'
                         />
                     </div>
                     <div>

@@ -1,10 +1,11 @@
 // src/_app.js
-import { AuthProvider } from '@/context/AuthContext';
+import Layout from './layout';
 
 export default function MyApp({ Component, pageProps }) {
+    console.log('JWT_SECRET:', process.env.JWT_SECRET);
     return (
-        <AuthProvider>
+        <Layout>
             <Component {...pageProps} />
-        </AuthProvider>
+        </Layout>
     );
 }
