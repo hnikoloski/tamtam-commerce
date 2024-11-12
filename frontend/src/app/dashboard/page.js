@@ -1,5 +1,5 @@
-// src/app/dashboard/page.js
 "use client";
+
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "@/context/AuthContext";
@@ -12,11 +12,16 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchDashboardData = async () => {
             try {
-                const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/dashboard`, {
-                    headers: { Authorization: `Bearer ${token}` },  // Use token
-                });
-                setDashboardData(response.data);
-                setError(null); // Clear any previous error
+                if (token) {
+                    const response = await axios.get(
+                        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/dashboard`,
+                        {
+                            headers: { Authorization: `Bearer ${token}` },
+                        }
+                    );
+                    setDashboardData(response.data);
+                    setError(null); // Clear any previous error
+                }
             } catch (err) {
                 console.error("Error fetching dashboard data:", err);
                 if (err.response && err.response.data.message === "Token is not valid") {
@@ -46,7 +51,6 @@ const Dashboard = () => {
         <div className="flex justify-center mt-8">
             <div className="w-full max-w-2xl bg-white p-8 rounded-lg shadow-lg">
                 <h1 className="text-3xl font-bold text-center mb-4">Dashboard</h1>
-
                 <div className="mb-6">
                     <h2 className="text-xl font-semibold">User Profile</h2>
                     <p><strong>Name:</strong> {userProfile.name}</p>

@@ -81,9 +81,14 @@ exports.refreshToken = async (req, res) => {
             return res.status(403).json({ message: 'Invalid refresh token' });
         }
 
+        // Log the refresh token and secret for debugging
+        console.log('Received refresh token:', token);
+        console.log('JWT_REFRESH_SECRET from .env:', process.env.JWT_REFRESH_SECRET);
+
         // Verify the refresh token
         jwt.verify(token, process.env.JWT_REFRESH_SECRET, (err, decoded) => {
             if (err) {
+                console.error('Error verifying refresh token:', err);
                 return res.status(403).json({ message: 'Failed to verify refresh token' });
             }
 

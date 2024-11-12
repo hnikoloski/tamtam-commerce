@@ -20,11 +20,11 @@ const Login = () => {
                 email,
                 password,
             });
-            const token = response.data.token;
+            const token = response.data.accessToken;  // Use the accessToken returned by the backend
             login(token); // Set the token in context
-            router.push('/dashboard');
+            router.push("/dashboard");
         } catch (err) {
-            setError('Invalid credentials. Please try again.');
+            setError("Invalid credentials. Please try again.");
             console.error('Login error:', err);
         }
     };

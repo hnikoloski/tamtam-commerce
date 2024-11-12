@@ -1,6 +1,4 @@
-// middleware/authMiddleware.js
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
 
 const authMiddleware = async (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -12,8 +10,7 @@ const authMiddleware = async (req, res, next) => {
     try {
         // Verify token
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        // Attach the user ID to req.user
-        req.user = { id: decoded.id };
+        req.user = { id: decoded.id };  // Attach user data to request
         next();
     } catch (error) {
         if (error.name === 'TokenExpiredError') {
