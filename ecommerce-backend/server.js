@@ -8,6 +8,7 @@ const siteRoutes = require('./routes/siteRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 
 // Initialize the Express app
 const app = express();
@@ -38,7 +39,8 @@ app.use('/api/user', userRoutes);
 
 // Product routes
 app.use('/api/products', productRoutes);
-console.log("JWT_SECRET from .env:", process.env.JWT_SECRET);
+
+app.use('/api/cart', cartRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

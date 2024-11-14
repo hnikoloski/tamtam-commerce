@@ -1,50 +1,83 @@
-// src/components/Header.jsx
 "use client";
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import { FaUserCircle } from "react-icons/fa"; // Optional icon import
 
 const Header = () => {
-  const { token, logout, loading } = useContext(AuthContext); // Correctly destructure the context
+  const { token, logout, loading } = useContext(AuthContext);
   const router = useRouter();
+  const [isScrolled, setIsScrolled] = useState(false); // Track scroll position
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Check if the page is scrolled beyond a certain point (50px for example)
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   if (loading) {
-    return <p>Loading...</p>; // Prevent rendering if context is still loading
+    return <p>Loading...</p>;
   }
 
   const handleLogout = () => {
-    logout(); // Log the user out and redirect to login page
+    logout();
     router.push("/login");
   };
 
   return (
-    <header className="bg-blue-500 text-white py-4">
-      <div className="container mx-auto flex justify-between items-center px-4">
-        <Link href="/">
-          <h1 className="text-xl font-bold">TamTam E-commerce</h1>
+    <header
+      className={`fixed top-0 left-0 w-full z-50 py-4 px-8 transition-all duration-300 bg-primary-900 ${
+        isScrolled
+          ? "bg-opacity-80 backdrop-blur-lg shadow-lg"
+          : "bg-opacity-100 backdrop-blur-none"
+      }`}
+      id="masthead"
+    >
+      <div className="container mx-auto flex justify-between items-center">
+        <Link href="/" className="text-2xl font-semibold text-white">
+          TamTam E-commerce
         </Link>
-        <nav>
-          {token ? ( // If token exists, show dashboard and logout
+
+        <nav className="flex items-center space-x-8">
+          {token ? (
             <>
-              <Link href="/dashboard" className="mr-4">
+              <Link
+                href="/dashboard"
+                className="text-lg text-primary hover:text-primary-500 transition duration-300"
+              >
                 Dashboard
               </Link>
               <button
                 onClick={handleLogout}
-                className="bg-red-500 px-3 py-1 rounded hover:bg-red-600 transition"
+                className="bg-primary-600 text-foreground px-4 py-2 rounded-lg hover:bg-primary-700 transition duration-300"
               >
                 Logout
               </button>
             </>
           ) : (
-            // Otherwise, show login link
             <Link
               href="/login"
-              className="bg-green-500 px-3 py-1 rounded hover:bg-green-600 transition"
+              className="bg-primary text-foreground px-4 py-2 rounded-lg hover:bg-primary-700 transition duration-300"
             >
               Login
             </Link>
+          )}
+
+          {/* Optional User Icon */}
+          {token && (
+            <FaUserCircle className="text-primary text-2xl cursor-pointer hover:text-primary-500 transition duration-300" />
           )}
         </nav>
       </div>

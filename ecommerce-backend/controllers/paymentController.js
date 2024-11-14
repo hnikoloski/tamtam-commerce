@@ -26,16 +26,26 @@ const logger = winston.createLogger({
 
 // Create a new payment
 exports.createPayment = async (req, res) => {
-    const { amount, description } = req.body;
     const userId = req.user.id;
 
     try {
+        // Get the user's cart
+        const cart = await Cart.findOne({ userId }).populate('items.productId');
+        if (!cart || cart.items.length === 0) {
+            return res.status(400).json({ message: 'Cart is empty' });
+        }
+
+        // Calculate total amount
+        const amount = cart.items.reduce((total, item) => {
+            return total + item.productId.price * item.quantity;
+        }, 0);
+
         // Create payment with Mollie
         const payment = await mollieClient.payments.create({
             amount: { currency: 'EUR', value: amount.toFixed(2) },
-            description,
-            redirectUrl: `${process.env.BASE_URL}/success`, // Use your ngrok URL with `/success` path
-            webhookUrl: `${process.env.BASE_URL}/api/payments/webhook`, // Webhook URL
+            description: 'Order Payment',
+            redirectUrl: `${process.env.BASE_URL}/success`,
+            webhookUrl: `${process.env.BASE_URL}/api/payments/webhook`,
             metadata: { userId },
         });
 
@@ -45,17 +55,18 @@ exports.createPayment = async (req, res) => {
             paymentId: payment.id,
             amount,
             currency: 'EUR',
-            status: 'pending', // Initially pending
-            description,
+            status: 'pending',
+            description: 'Order Payment',
         });
         await newPayment.save();
 
         res.status(200).json({ paymentId: payment.id, checkoutUrl: payment.getCheckoutUrl() });
     } catch (error) {
-        logger.error("Error creating payment:", error);
+        logger.error('Error creating payment:', error);
         res.status(500).json({ message: 'Payment creation failed' });
     }
 };
+
 
 // Handle webhook for payment status updates
 exports.handleWebhook = async (req, res) => {

@@ -1,12 +1,14 @@
+// src/components/products/ProductForm.jsx
 "use client";
 import React, { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "@/context/AuthContext";
 
 const ProductForm = ({ onProductAdded }) => {
-  const { token } = useContext(AuthContext);
+  const { token } = useContext(AuthContext); // Get token from context
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,16 +18,18 @@ const ProductForm = ({ onProductAdded }) => {
         {
           name,
           price,
+          description,
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Send token with request
           },
         }
       );
       onProductAdded(response.data); // Pass new product to parent
       setName("");
       setPrice("");
+      setDescription("");
     } catch (error) {
       console.error("Error adding product:", error);
     }
@@ -46,6 +50,13 @@ const ProductForm = ({ onProductAdded }) => {
         value={price}
         onChange={(e) => setPrice(e.target.value)}
         placeholder="Price"
+        className="border p-2 rounded"
+        required
+      />
+      <textarea
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        placeholder="Description"
         className="border p-2 rounded"
         required
       />

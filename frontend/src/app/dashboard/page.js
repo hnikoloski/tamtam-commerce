@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "@/context/AuthContext";
@@ -48,56 +47,59 @@ const Dashboard = () => {
     const { subscriptionExpiry, userProfile, paymentHistory, totalPayments } = dashboardData;
 
     return (
-        <div className="flex justify-center mt-8">
-            <div className="w-full max-w-2xl bg-white p-8 rounded-lg shadow-lg">
-                <h1 className="text-3xl font-bold text-center mb-4">Dashboard</h1>
-                <div className="mb-6">
-                    <h2 className="text-xl font-semibold">User Profile</h2>
-                    <p><strong>Name:</strong> {userProfile.name}</p>
-                    <p><strong>Email:</strong> {userProfile.email}</p>
-                </div>
+        <div className="flex justify-center bg-background">
+            <div className="w-full max-w-2xl bg-gray-900 text-white p-8 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-bold text-center mb-6 text-primary">Dashboard</h1>
 
-                <div className="mb-6">
-                    <h2 className="text-xl font-semibold">Subscription Status</h2>
-                    <p><strong>Expires On:</strong> {subscriptionExpiry}</p>
-                </div>
+                <div className="mb-6 space-y-4">
+                    <div>
+                        <h2 className="text-xl font-semibold text-foreground">User Profile</h2>
+                        <p><strong>Name:</strong> {userProfile.name}</p>
+                        <p><strong>Email:</strong> {userProfile.email}</p>
+                    </div>
 
-                <div className="mb-6">
-                    <h2 className="text-xl font-semibold">Total Payments</h2>
-                    <p>{totalPayments} EUR</p>
-                </div>
+                    <div>
+                        <h2 className="text-xl font-semibold text-foreground">Subscription Status</h2>
+                        <p><strong>Expires On:</strong> {subscriptionExpiry}</p>
+                    </div>
 
-                <div>
-                    <h2 className="text-xl font-semibold mb-2">Payment History</h2>
-                    <ul className="space-y-4">
-                        {paymentHistory.map((payment) => (
-                            <li
-                                key={payment._id}
-                                className="p-4 border rounded-lg shadow-sm bg-gray-50"
-                            >
-                                <p>
-                                    <strong>Description:</strong> {payment.description}
-                                </p>
-                                <p>
-                                    <strong>Amount:</strong> {payment.amount} {payment.currency}
-                                </p>
-                                <p>
-                                    <strong>Status:</strong>{" "}
-                                    <span
-                                        className={`font-semibold ${payment.status === "paid"
-                                            ? "text-green-500"
-                                            : "text-red-500"
-                                            }`}
-                                    >
-                                        {payment.status}
-                                    </span>
-                                </p>
-                                <p>
-                                    <strong>Date:</strong> {new Date(payment.createdAt).toLocaleDateString()}
-                                </p>
-                            </li>
-                        ))}
-                    </ul>
+                    <div>
+                        <h2 className="text-xl font-semibold text-foreground">Total Payments</h2>
+                        <p>{totalPayments} EUR</p>
+                    </div>
+
+                    <div>
+                        <h2 className="text-xl font-semibold text-foreground">Payment History</h2>
+                        <ul className="space-y-4">
+                            {paymentHistory.map((payment) => (
+                                <li
+                                    key={payment._id}
+                                    className="p-4 border border-gray-700 rounded-lg bg-gray-800 shadow-md"
+                                >
+                                    <p>
+                                        <strong>Description:</strong> {payment.description}
+                                    </p>
+                                    <p>
+                                        <strong>Amount:</strong> {payment.amount} {payment.currency}
+                                    </p>
+                                    <p>
+                                        <strong>Status:</strong>{" "}
+                                        <span
+                                            className={`font-semibold ${payment.status === "paid"
+                                                ? "text-green-500"
+                                                : "text-red-500"
+                                                }`}
+                                        >
+                                            {payment.status === "paid" ? "Active" : "Pending"}
+                                        </span>
+                                    </p>
+                                    <p>
+                                        <strong>Date:</strong> {new Date(payment.createdAt).toLocaleDateString()}
+                                    </p>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
